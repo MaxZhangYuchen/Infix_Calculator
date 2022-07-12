@@ -20,11 +20,6 @@ public class Calculator implements InfixCalculator {
 
     /**
      * split expression
-     * 1. 包含空格
-     * 2. 无法拆分负数
-     *
-     * @param exp
-     * @return
      */
     private ArrayList<String> splitExp(String exp) {
         ArrayList<String> arrayList = new ArrayList<>();
@@ -76,7 +71,7 @@ public class Calculator implements InfixCalculator {
     }
 
     /**
-     * calculate
+     * count two num
      *
      * @param left
      * @param right
@@ -113,8 +108,8 @@ public class Calculator implements InfixCalculator {
      */
     @Override
     public String evalExp(String exp) {
-        ArrayList<String> postfix = new ArrayList<String>();       // 后缀表达式
-        Stack<String> operator = new Stack<>();     // 符号
+        MyQueue<String> postfix = new MyQueue<>();       // 后缀表达式
+        MyStack<String> operator = new MyStack<>();     // 符号
         // split Expression
         ArrayList<String> infix = splitExp(exp);
 
@@ -125,13 +120,13 @@ public class Calculator implements InfixCalculator {
                 if (!operator.isEmpty()) {
                     if (Objects.equals(token, ")")) {
                         while (!operator.isEmpty() && !Objects.equals(operator.peek(), "(")) {
-                            postfix.add(operator.peek());
+                            postfix.put(operator.peek());
                             operator.pop();
                         }
                         operator.pop();
                     } else {
                         while (!operator.isEmpty() && map.get(token) <= map.get(operator.peek()) && !Objects.equals(operator.peek(), "(")) {
-                            postfix.add(operator.peek());
+                            postfix.put(operator.peek());
                             operator.pop();
                         }
                         operator.push(token);
@@ -140,17 +135,18 @@ public class Calculator implements InfixCalculator {
                     operator.push(token);
                 }
             } else {
-                postfix.add(token);
+                postfix.put(token);
             }
         }
         while (!operator.isEmpty()) {
-            postfix.add(operator.peek());
+            postfix.put(operator.peek());
             operator.pop();
         }
 
         // calculate the result
-        Stack<Double> cal = new Stack<>();
-        for (String token : postfix) {
+        MyStack<Double> cal = new MyStack<>();
+        while (!postfix.isEmpty()) {
+            String token = postfix.get();
             if (map.containsKey(token)) {
                 Double right = cal.peek();
                 cal.pop();

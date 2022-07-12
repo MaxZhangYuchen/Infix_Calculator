@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 //借助LinkedList 类中的方法实现队列
 public class MyQueue <E> {
-    private LinkedList<E> li = new LinkedList<E>();
+    private DoubleLinkedList<E> li = new DoubleLinkedList<>();
 
     // 1构造方法
     public MyQueue() {
