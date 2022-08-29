@@ -21,9 +21,6 @@ public class DoubleLinkedList<E> {
         head.setNext(tail);
         tail.setPrev(head);
     }
-    public static void main(String[] args) {
-        // ...
-    }
     /**
      * 向双向链表指定索引位置插入一个新元素。
      * @param index

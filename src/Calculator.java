@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Stack;
 
 public class Calculator implements InfixCalculator {
     // priority list 优先级表
-    HashMap<String, Integer> map = new HashMap<String, Integer>() {
+    private final HashMap<String, Integer> priority = new HashMap<String, Integer>() {
         {
             put("+", 1);
             put("-", 1);
@@ -102,9 +101,6 @@ public class Calculator implements InfixCalculator {
 
     /**
      * calculate the whole expression
-     *
-     * @param exp
-     * @return
      */
     @Override
     public String evalExp(String exp) {
@@ -112,11 +108,9 @@ public class Calculator implements InfixCalculator {
         MyStack<String> operator = new MyStack<>();     // 符号
         // split Expression
         ArrayList<String> infix = splitExp(exp);
-
-
         // infix to postfix 中缀表达式转后缀表达式
         for (String token : infix) {
-            if (map.containsKey(token)) {
+            if (priority.containsKey(token)) {
                 if (!operator.isEmpty()) {
                     if (Objects.equals(token, ")")) {
                         while (!operator.isEmpty() && !Objects.equals(operator.peek(), "(")) {
@@ -125,7 +119,7 @@ public class Calculator implements InfixCalculator {
                         }
                         operator.pop();
                     } else {
-                        while (!operator.isEmpty() && map.get(token) <= map.get(operator.peek()) && !Objects.equals(operator.peek(), "(")) {
+                        while (!operator.isEmpty() && priority.get(token) <= priority.get(operator.peek()) && !Objects.equals(operator.peek(), "(")) {
                             postfix.put(operator.peek());
                             operator.pop();
                         }
@@ -147,7 +141,7 @@ public class Calculator implements InfixCalculator {
         MyStack<Double> cal = new MyStack<>();
         while (!postfix.isEmpty()) {
             String token = postfix.get();
-            if (map.containsKey(token)) {
+            if (priority.containsKey(token)) {
                 Double right = cal.peek();
                 cal.pop();
                 Double left = cal.peek();
